@@ -13,8 +13,16 @@ from app.forms import RegistrationForm
 @app.route('/')
 
 @app.route('/index')
+@app.route('/user/<username>')
 @login_required
 
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = [
+        {'author':user, 'body':'Test post #1'},
+        {'author':user, 'body':'Test post #2'}
+    ]
+    return render_template('user.html', user=user, posts=posts)
 def index():
     posts = [
         {
@@ -26,7 +34,7 @@ def index():
             'body': 'The Avengers movie was so cool!'
         }
     ]
-    return render_template('index.html', title='Home', posts=posts)
+    return render_template('index.html', title='Home', posts=posts)#
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
